@@ -307,6 +307,21 @@ The following activate only after Tyler confirms the correct parcel:
 - Offer strategy
 - Valuation
 
+**Compact first answer format:**
+
+For address mismatch, not parcel verified, coverage gap, or multiple candidate responses, use a short structured response only. No long prose. No test commentary. No oversized tables. No market explanations in paragraph form.
+
+Include only:
+1. Status (e.g. Address mismatch, LP coverage gap, Multiple candidates)
+2. Candidate parcel if any (APN, size, land use, one key flag)
+3. Mismatch or gap reason in one line
+4. Cache status (Fresh Area Statistics / Reused Area Statistics / No cache found)
+5. Required next step
+
+If Duke has Local Area Context to add, keep it brief. If more detail is available, Duke may add one line: "More detail available if you want it."
+
+Speed beats polish. First usable answer under 120 seconds.
+
 **End with one clean confirmation question. Stop.**
 
 ---
