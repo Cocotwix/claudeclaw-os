@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'preact/hooks';
-import { Send, Square, Sparkles, ArrowDown } from 'lucide-preact';
+import { Send, Square, Sparkles, ArrowDown, RotateCcw } from 'lucide-preact';
 import { PageHeader } from '@/components/PageHeader';
 import { PageState } from '@/components/PageState';
 import { StatusDot } from '@/components/Pill';
@@ -30,6 +30,7 @@ export function Chat() {
   const [loading, setLoading] = useState(true);
   const [draft, setDraft] = useState('');
   const [sending, setSending] = useState(false);
+  const [clearingSession, setClearingSession] = useState(false);
   const [processing, setProcessing] = useState(false);
   const [progressLabel, setProgressLabel] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -157,6 +158,20 @@ export function Chat() {
     try { await apiPost('/api/chat/abort'); } catch {}
   }
 
+  async function newChat() {
+    if (activeAgent === 'all') return;
+    setClearingSession(true);
+    setError(null);
+    try {
+      await apiPost('/api/chat/clear-session', { agentId: activeAgent });
+      setTurns([]);
+    } catch (err: any) {
+      setError(err?.message || String(err));
+    } finally {
+      setClearingSession(false);
+    }
+  }
+
   function quick(prompt: string) {
     void send(prompt);
     inputRef.current?.focus();
@@ -236,6 +251,16 @@ export function Chat() {
                 {qa.label}
               </button>
             ))}
+            <button
+              type="button"
+              onClick={() => void newChat()}
+              disabled={activeAgent === 'all' || processing || sending || clearingSession}
+              title={activeAgent === 'all' ? 'Select an agent to start a new chat' : 'Clear session and start fresh'}
+              class="ml-auto inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10.5px] text-[var(--color-text-muted)] hover:text-[var(--color-text)] hover:bg-[var(--color-elevated)] border border-[var(--color-border)] transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+            >
+              <RotateCcw size={10} />
+              {clearingSession ? 'Clearing…' : 'New Chat'}
+            </button>
           </div>
           <div class="flex items-end gap-2">
             <textarea

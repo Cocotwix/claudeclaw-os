@@ -25,6 +25,7 @@ import {
   getDashboardCostTimeline,
   getDashboardRecentTokenUsage,
   getSession,
+  clearSession,
   getSessionTokenUsage,
   getHiveMindEntries,
   getAgentTokenStats,
@@ -2944,6 +2945,16 @@ export function buildDashboardApp(botApi?: Api<RawApi>): Hono {
     if (!chatId) return c.json({ ok: false, reason: 'not_processing' });
     const aborted = abortActiveQuery(chatId);
     return c.json({ ok: aborted });
+  });
+
+  // Clear backend session for the selected agent (dashboard "New Chat")
+  app.post('/api/chat/clear-session', async (c) => {
+    const body = await c.req.json<{ agentId?: string }>().catch((): { agentId?: string } => ({}));
+    const chatIdStr = ALLOWED_CHAT_ID || '';
+    if (!chatIdStr) return c.json({ error: 'no chat configured' }, 503);
+    const agentId = body?.agentId?.trim() || AGENT_ID;
+    clearSession(chatIdStr, agentId);
+    return c.json({ ok: true });
   });
 
   // SPA catch-all — any unmatched GET to a non-/api/* path falls through
