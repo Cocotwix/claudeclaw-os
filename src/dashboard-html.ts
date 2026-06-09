@@ -147,6 +147,9 @@ const WARROOM_ENABLED = warroomEnabled;
   .chat-send-btn { background: #4f46e5; color: #fff; border: none; border-radius: 12px; padding: 0 16px; cursor: pointer; font-size: 14px; font-weight: 600; transition: background 0.15s; flex-shrink: 0; }
   .chat-send-btn:hover { background: #4338ca; }
   .chat-send-btn:disabled { background: #2a2a2a; color: #666; cursor: not-allowed; }
+  .chat-mic-btn { background: none; border: 1px solid #2a2a2a; border-radius: 12px; color: #9ca3af; width: 40px; cursor: pointer; font-size: 16px; transition: color 0.15s, border-color 0.15s; flex-shrink: 0; }
+  .chat-mic-btn:hover { border-color: #4f46e5; color: #e0e0e0; }
+  .chat-mic-btn.listening { border-color: #f87171; color: #f87171; }
 </style>
 </head>
 <body class="p-4 select-none">
@@ -2786,6 +2789,28 @@ function autoResizeInput() {
   el.style.height = Math.min(el.scrollHeight, 120) + 'px';
 }
 
+function startVoiceInput() {
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (!SR) { alert('Voice input not supported in this browser.'); return; }
+  const btn = document.getElementById('chat-mic-btn');
+  if (btn.classList.contains('listening')) return;
+  const r = new SR();
+  r.lang = 'en-US';
+  r.interimResults = false;
+  r.maxAlternatives = 1;
+  btn.classList.add('listening');
+  r.onresult = (e) => {
+    const t = e.results[0][0].transcript;
+    const input = document.getElementById('chat-input');
+    input.value = (input.value ? input.value + ' ' : '') + t;
+    autoResizeInput();
+    input.focus();
+  };
+  r.onerror = (e) => { if (e.error !== 'no-speech') console.warn('Voice input error:', e.error); };
+  r.onend = () => btn.classList.remove('listening');
+  r.start();
+}
+
 async function abortProcessing() {
   try {
     await fetch(BASE + '/api/chat/abort?token=' + TOKEN, { method: 'POST' });
@@ -2834,6 +2859,7 @@ async function abortProcessing() {
   </div>
   <div class="chat-input-area">
     <textarea class="chat-textarea" id="chat-input" rows="1" placeholder="Send a message..." oninput="autoResizeInput()" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendChatMessage()}"></textarea>
+    <button class="chat-mic-btn" id="chat-mic-btn" onclick="startVoiceInput()" title="Voice input">🎙</button>
     <button class="chat-send-btn" id="chat-send-btn" onclick="sendChatMessage()">Send</button>
   </div>
 </div>
