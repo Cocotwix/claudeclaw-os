@@ -180,7 +180,7 @@ Duke must not:
 
 **Partial Report (default)**
 
-Runs automatically whenever Tyler submits a parcel. Uses lp_search and lp_property_data only. No comp credit spent. Delivers a complete scored report with preliminary valuation and preliminary offer guidance. Valuation is labeled PRELIMINARY because no paid comp report was run.
+Runs automatically whenever Tyler submits a parcel. Uses lp_resolve_property (and lp_property_data directly only when propertyid+fips are already known). No comp credit spent. Delivers a complete scored report with preliminary valuation and preliminary offer guidance. Valuation is labeled PRELIMINARY because no paid comp report was run.
 
 **Full Report**
 
@@ -331,7 +331,9 @@ Speed beats polish. First usable answer under 120 seconds.
 
 ### Step 4: Pull Parcel Data
 
-Duke retrieves available LandPortal parcel data, including fields such as:
+When lp_resolve_property returned verified:true, the property_summary field already contains all parcel data. Duke uses that directly. Duke does not call lp_property_data again.
+
+Duke extracts the following fields from property_summary (or from a direct lp_property_data call if lp_resolve_property was skipped because propertyid+fips were provided directly):
 
 - Ownership
 - Tax history
@@ -401,10 +403,16 @@ Duke generates:
 1. Obsidian markdown report (Status: PARTIAL).
 2. Downloadable PDF report.
 3. Chat summary: 2-3 sentences with Land Score, verdict, and critical anomaly.
-4. Property-specific county call checklist.
-5. Discovery call prep / DD handoff for Ace.
-6. Data gaps section.
-7. Credit usage summary (0 comp credits used).
+4. Acreage band identified from parcel size.
+5. Tyler's underwriting criteria applied: scoring rubric (Section 7), EV formula (Section 8), offer strategy band (Section 9). Labeled PRELIMINARY.
+6. Preliminary pass/fail verdict (PURSUE / PURSUE WITH CAUTION / PASS). Labeled PRELIMINARY.
+7. Preliminary exit strategy with offer range in dollar amounts. Labeled PRELIMINARY.
+8. Preliminary offer guidance -- only if parcel is verified. Labeled PRELIMINARY. Suppressed entirely if parcel is not verified.
+9. Red flags and anomaly flags.
+10. What is needed before final underwriting: data gaps, county call items, fields that require verification before any offer is made.
+11. Property-specific county call checklist.
+12. Discovery call prep / DD handoff for Ace.
+13. Credit usage summary (0 comp credits used).
 
 After delivering the Partial Report, Duke always closes with:
 
@@ -571,11 +579,19 @@ Duke generates:
 
 1. Updated Obsidian markdown report (Status: COMPLETE).
 2. Updated PDF report.
-3. Updated chat summary.
-4. Risk-adjusted MAO with comp-supported figures.
-5. Updated offer strategy with dollar amounts.
-6. Updated anomaly flags if applicable.
-7. Credit usage summary (1 comp credit used).
+3. Updated chat summary with final verdict.
+4. Acreage band applied.
+5. Tyler's underwriting criteria applied: scoring rubric, EV formula, offer strategy band.
+6. Underwriting logic: EV inputs, weights, comp quality, and confidence level.
+7. Pass/fail verdict (PURSUE / PURSUE WITH CAUTION / PASS).
+8. Best exit strategy with offer range in dollar amounts.
+9. Backup exit strategy (double close when applicable).
+10. Where we need to be on offer.
+11. Offer guidance.
+12. Risk notes and anomaly flags.
+13. What would kill the deal: hard flags from anomaly checks and escalation items.
+14. What still needs human confirmation: escalation items and data gaps requiring county or professional verification.
+15. Credit usage summary (1 comp credit used).
 
 ---
 
