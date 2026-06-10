@@ -163,15 +163,18 @@ export function Chat() {
   }
 
   async function newChat() {
-    if (activeAgent === 'all') return;
     // Stop any active mic session before clearing
     if (recognitionRef.current) { try { recognitionRef.current.stop(); } catch {} }
     setListening(false);
     setProcessing(false);
     setProgressLabel(null);
-    setClearingSession(true);
     setError(null);
     setDraft('');
+    if (activeAgent === 'all') {
+      setTurns([]);
+      return;
+    }
+    setClearingSession(true);
     try {
       await apiPost('/api/chat/clear-session', { agentId: activeAgent });
       setTurns([]);
@@ -291,8 +294,8 @@ export function Chat() {
             <button
               type="button"
               onClick={() => void newChat()}
-              disabled={activeAgent === 'all' || sending || clearingSession}
-              title={activeAgent === 'all' ? 'Select an agent to start a new chat' : 'Clear session and start fresh'}
+              disabled={sending || clearingSession}
+              title="Clear session and start fresh"
               class="ml-auto inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10.5px] text-[var(--color-text-muted)] hover:text-[var(--color-text)] hover:bg-[var(--color-elevated)] border border-[var(--color-border)] transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
             >
               <RotateCcw size={10} />
