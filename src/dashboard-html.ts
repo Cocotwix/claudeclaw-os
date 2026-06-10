@@ -147,7 +147,7 @@ const WARROOM_ENABLED = warroomEnabled;
   .chat-send-btn { background: #4f46e5; color: #fff; border: none; border-radius: 12px; padding: 0 16px; cursor: pointer; font-size: 14px; font-weight: 600; transition: background 0.15s; flex-shrink: 0; }
   .chat-send-btn:hover { background: #4338ca; }
   .chat-send-btn:disabled { background: #2a2a2a; color: #666; cursor: not-allowed; }
-  .chat-mic-btn { background: none; border: 1px solid #2a2a2a; border-radius: 12px; color: #9ca3af; width: 40px; cursor: pointer; font-size: 16px; transition: color 0.15s, border-color 0.15s; flex-shrink: 0; }
+  .chat-mic-btn { background: none; border: 1px solid #2a2a2a; border-radius: 12px; color: #9ca3af; width: 40px; height: 40px; cursor: pointer; font-size: 16px; transition: color 0.15s, border-color 0.15s; flex-shrink: 0; }
   .chat-mic-btn:hover { border-color: #4f46e5; color: #e0e0e0; }
   .chat-mic-btn.listening { border-color: #f87171; color: #f87171; }
 </style>
