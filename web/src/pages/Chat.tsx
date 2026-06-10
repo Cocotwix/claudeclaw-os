@@ -164,10 +164,14 @@ export function Chat() {
 
   async function newChat() {
     if (activeAgent === 'all') return;
+    // Stop any active mic session before clearing
+    if (recognitionRef.current) { try { recognitionRef.current.stop(); } catch {} }
+    setListening(false);
     setProcessing(false);
     setProgressLabel(null);
     setClearingSession(true);
     setError(null);
+    setDraft('');
     try {
       await apiPost('/api/chat/clear-session', { agentId: activeAgent });
       setTurns([]);
