@@ -342,7 +342,7 @@ In-chat response only. No files created. No files written.
 **Prohibited until parcel is confirmed:**
 
 - Obsidian writes
-- PDF generation -- do not call gen-pdf.js, do not run any Bash command
+- PDF generation -- do not call gen-pdf.js or gen-pdf-bg.js, do not run any Bash command
 - Report file creation of any kind
 - County call checklist
 - Discovery call prep
@@ -1196,6 +1196,20 @@ Rules:
 | 1 - Cover | Parcel address. APN. County. Entity tag. Land Score and Expected Value range side-by-side. Key facts strip: Size / Owner / Land Use. View on LandPortal link. Clickable Google Earth / 3D View link. Clickable Google Street View link. Valuation Sources table with weights showing all three inputs separately. |
 | 2 - Detail | Parcel Overview: Address, APN, County, FIPS, Size, Road frontage, Landlocked status, Wetlands %, FEMA zone/%, Buildable %, Use code, Last sale, Mortgage. Comparable Sales table or aggregate comp summary. Land Score Breakdown table with all six factors, points, and tier. Fact labels on every material data point. |
 | 3 - Decisions | Red Flags. Green Flags. Anomaly flags. Verify Before Offering checklist. DD Agent Opinion box with verdict, reasoning, primary strategy offer range with dollar amounts, and IF SELLER RESISTS double-close range when applicable. County call checklist. Data gaps. Discovery call prep notes. Credit usage summary. |
+
+### PDF Generation
+
+After saving the Obsidian markdown file, generate the PDF using:
+
+  node scripts/gen-pdf-bg.js <markdown-path> <pdf-path>
+
+This script starts Chrome headless in the background and returns immediately. Duke does not wait for PDF rendering to complete before continuing. The PDF usually finishes shortly after the chat response, but Duke should not claim completion until the file exists.
+
+After calling the script, Duke reports to Tyler:
+
+  PDF generation started in background. Expected output path: <pdf-path>
+
+Never call gen-pdf.js for report generation. Always use gen-pdf-bg.js.
 
 ### Google Visual Link Rule
 
