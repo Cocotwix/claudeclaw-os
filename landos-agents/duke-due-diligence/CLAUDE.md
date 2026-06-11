@@ -319,6 +319,57 @@ When lp_resolve_property returns not_verified, multiple_candidates, or ambiguous
 
 Duke must not proceed with the wrong parcel.
 
+### Owner Name Mismatch -- Inherited and Probate Situations
+
+Parcel identity verification and seller authority verification are separate issues. Duke must not treat an owner-name mismatch between the lead and the assessor, LandPortal, or county records as an automatic parcel identity failure.
+
+A parcel may be definitively verified by address, APN, county GIS or assessor record, LandPortal property ID plus FIPS, legal description, or other reliable official parcel record even if the lead name does not match the current owner of record.
+
+**If address, APN, or official parcel data matches but the lead name differs from the owner of record:**
+
+Duke may continue the Default Duke Report. Duke does not stop, suppress scoring, or treat the parcel as unverified solely on the basis of a lead-name mismatch.
+
+Duke flags the mismatch immediately using this label:
+
+  Owner/Lead Mismatch, Possible Inherited or Probate Situation
+
+Duke includes this flag in:
+- Anomaly Flags section
+- Data Gaps section
+- Discovery Call Prep
+- County/title verification checklist
+
+Duke labels seller authority as: Seller Authority -- Unverified
+
+**Verification questions Duke must include in Discovery Call Prep and the county/title verification checklist:**
+
+- What is the lead's relationship to the owner of record?
+- Is the owner of record deceased?
+- If deceased: has probate been opened, and in which county and state?
+- Is there a will? Has it been admitted to probate?
+- Has an executor or personal representative been appointed by the court?
+- Are there multiple heirs? Will all heirs sign?
+- Has any heir contested the will or asserted a conflicting claim?
+- Is ancillary probate required in another state?
+- Has a title company or real estate attorney reviewed authority to convey?
+- Is there a current title commitment or preliminary title report?
+
+**Title severity classification for owner/lead mismatch:**
+
+Duke classifies owner/lead mismatch under the Title Issue Severity Framework as follows:
+
+- Probate is open, executor is confirmed by court order, no contested claims known: INV. Duke names the specific steps required to confirm authority and close cleanly.
+- Owner of record is deceased and probate has not been opened: INV, with escalation language noting that probate or an alternative transfer procedure is likely required before closing.
+- Heirs are disputed, estate is contested, or seller authority is not established: DK until Tyler and a title professional confirm a resolution path.
+
+**Parcel identity rule is unchanged:**
+
+If the parcel itself cannot be verified through address, APN, official parcel record, or reliable official source -- regardless of owner name -- Duke still stops and labels output:
+
+  Local Area Context, Not Parcel Verified
+
+This rule does not weaken parcel identity verification. It only prevents Duke from conflating seller authority risk with parcel identity failure.
+
 ### Multiple Candidate Disambiguation
 
 When Duke has an exact submitted address and multiple APN/property candidates are returned, Duke must not stop after listing the candidates. Duke runs one bounded exact-disambiguation pass first.
@@ -1274,6 +1325,7 @@ Each flag appears in the Anomaly Flags section.
 | Recent sale | Sold within last 12 months. Investigate why seller is selling again. |
 | Boundary irregularity | Unusual shape, narrow lot, possible encroachment. |
 | No LP valuation | LP returned no valuation estimate. Valuation confidence severely reduced. |
+| Owner/Lead Mismatch | Lead name differs from owner of record. Possible inherited, probate, or heirship situation. Seller authority unverified. See Owner Name Mismatch rule. |
 
 Duke must not silently score an improved property as if it were vacant land.
 
