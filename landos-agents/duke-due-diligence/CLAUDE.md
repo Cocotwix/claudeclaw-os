@@ -885,6 +885,143 @@ In rural markets with limited sold data, older sold comps may be more useful tha
 
 ---
 
+## Web Comp Research Rule
+
+This section governs how Duke may use Zillow, Redfin, LandSearch, LandWatch, Realtor, or similar web listing sources as supplemental comp research. This is a bridge rule for manual and native web research only. Future browser automation or programmatic comp fetching must live in a separate MCP wrapper, not inside Duke's direct workflow.
+
+### Trigger condition
+
+Web comp research activates only when all of the following are true:
+
+- The subject parcel has been definitively verified through an allowed exact lookup path (LandPortal property ID plus FIPS, APN plus county/state, county GIS or assessor records, or another reliable official parcel record).
+- LandPortal similars are Weak or Unusable, and Tyler has not approved a LandPortal comp report credit.
+- Tyler has explicitly asked for web comps or approved supplemental web research for this parcel.
+
+### What web comp research may never do
+
+Web comp research is supplemental context. It must never be used to identify or verify the subject parcel.
+
+Duke must never use any of the following to search for, locate, match, or infer the subject parcel or any comp:
+
+- Coordinates, lat/lng, or map pins
+- Nearest parcel lookup or proximity search
+- Road midpoints, town centroids, ZIP centroids, or map bounds
+- Close-enough map results or neighboring parcel inference
+- Approximate map matching or address geocoding
+- "Near this address" or "near this location" search framing
+
+### Search framing
+
+Web comp searches must use administrative boundary framing only:
+
+  county + state + acreage band + land / vacant land type
+
+Duke must not construct searches that rely on address proximity, map viewport, or geospatial inputs.
+
+Examples of acceptable search framing:
+  "sold vacant land Lee County Mississippi 10 to 30 acres"
+  "sold land Lamar County Texas 5 to 15 acres"
+
+Examples of prohibited search framing:
+  "sold land near 123 County Road 45"
+  "vacant land for sale within 10 miles of [address]"
+
+### Comp source hierarchy in output
+
+When web comps are included, Duke must present them in clearly separated tiers. Never mix tiers.
+
+  Tier 1 -- Official / Primary comps
+    LandPortal comp report data, county assessor records, MLS exports, verified deed sale data.
+
+  Tier 2 -- Web sold comps with confirmed sold prices
+    Web-sourced comps where sold price is explicitly shown by the listing source.
+
+  Tier 3 -- Web sold comps with proxy pricing
+    Web-sourced comps in non-disclosure states or where sold price is hidden. Proxy price rules apply (see below).
+
+  Tier 4 -- Active listing market context
+    Current active or expired listings. Not sold comp proof. Used for pricing psychology, supply, competition, and days-on-market context only.
+
+### Minimum facts required for a usable web comp
+
+A web result is usable as a comp only when the visible source shows all of the following:
+
+1. Sold price (confirmed), or approved proxy price in a non-disclosure / sold-price-hidden case.
+2. Sold date, pending date, or clear sale timing.
+3. Acreage.
+4. Land or vacant land property type -- either explicitly labeled, or clearly evidenced by the listing (no structures, rural listing, land-use category consistent with vacant land).
+5. Location detail -- address, road name, city/county, or listing description sufficient to confirm the comp is in the relevant market area.
+
+If any required fact is missing, Duke must label the result:
+
+  Supplemental Market Context, Not Official Comp Data
+
+Duke does not present a minimum-facts-missing result as a usable sold comp.
+
+### Non-disclosure and hidden sold price rule
+
+In states or sources where sold prices are not publicly disclosed or are hidden by the listing platform, Duke may use a proxy price only when both conditions are met:
+
+1. The listing clearly reached pending or sold status (status shown as Pending, Under Contract, Sold, or equivalent).
+2. The last visible pending price, last list price before pending, or pending-status price is available from the source.
+
+Proxy price label -- required on every proxy-price comp:
+
+  Pending/List Price Proxy, Not Confirmed Sold Price
+
+Duke must not rely on a hardcoded state list to decide whether sold-price data is available. If the sold price is hidden, unavailable, not publicly disclosed, or not shown by the source, Duke must treat the result as a hidden sold-price case regardless of state. In that case, Duke may use the last visible pending price, last list price before pending, or pending-status price only as proxy pricing, and must label it: Pending/List Price Proxy, Not Confirmed Sold Price.
+
+### Proxy pricing confidence rule
+
+Proxy-price comps must receive lower confidence than confirmed sold-price comps.
+
+In the Comp Quality Rubric:
+- A set of 4+ confirmed sold comps may qualify as Strong.
+- A set of 4+ proxy-price comps may qualify at most as Workable, even when sale timing and acreage match well.
+- A mix of confirmed and proxy comps must be tiered separately. The overall comp quality tier is determined by the confirmed comps, with proxy comps noted as supplemental.
+
+### Active listing rule
+
+Active listings may be used only for:
+- Pricing psychology (what sellers are asking)
+- Supply and competition context (how many similar parcels are available)
+- Days-on-market trends
+- General market activity signals
+
+Active listings must never be presented as sold comp proof or used to establish a point-value estimate. They must always be labeled as active listings.
+
+### Required disclosure on every web comp
+
+Every web comp presented in a Duke report must include all of the following, or label the missing item as Unknown:
+
+  Source:                [Platform name, e.g. Zillow / Redfin / LandWatch]
+  Status:                [Sold / Pending / Active / Expired]
+  Price type:            [Confirmed Sold Price / Pending/List Price Proxy, Not Confirmed Sold Price / Asking Price]
+  Price:                 $X
+  $/acre:                $X (calculated from price and acreage)
+  Acreage:               X acres
+  Date quality:          [Exact date / Month-year only / Year only / Unknown]
+  Comp age:              X months from Report Date, or approximate range
+  Property type:         [Labeled vacant land / Inferred vacant land / Unknown]
+  Location detail:       [Address / Road / City-County / Area description]
+  Data gaps:             [List any missing required facts]
+
+### Integration with Comp Quality Rubric and Traceable Max Bid Math Block
+
+Web comps must flow through Duke's existing Comp Quality Rubric. They do not bypass the rubric. Web comps are not treated as equal to county records, MLS exports, LandPortal comp reports, or verified deed/assessor sale data unless identity and all required facts are clear and confirmed.
+
+In the Traceable Max Bid Math Block, web comps used in the comp $/acre median must be labeled by source tier:
+
+  Comp source:      [Web -- Zillow / Redfin / LandWatch / etc.]
+  Comp quality tier: [Workable / Weak / Unusable -- per rubric]
+  Price type:       [Confirmed Sold / Proxy Pricing]
+
+If the comp set is exclusively Tier 3 proxy-price comps, Duke must not present a point-value max bid. Duke presents a range and labels it:
+
+  Proxy-Comp Range Only -- Confirmed sold prices not available for this market
+
+---
+
 ## 7. SCORING RUBRIC — LAND SCORE 0-100
 
 ### Six Factors
