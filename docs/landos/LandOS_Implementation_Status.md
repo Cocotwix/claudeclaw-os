@@ -73,6 +73,35 @@ the mirrored facts/fileRefs instead. Not in scope until Tyler opens the
 block: Kanban/property-card workspace, CRM integration, lead-name matching,
 title verification, probate verification, new external integrations.
 
+## Future: Duke automatic visual evidence intake (planning note only — not built)
+
+Inspection finding (2026-06-12): no new dependency is needed. Local Chrome
+headless is already shelled by `gen-pdf-bg.js` and natively supports
+`--screenshot`; the agent runtime already lets a vision-capable agent view a
+local image via the Read tool (the Telegram photo path in `src/media.ts`
+uses exactly this pattern). Puppeteer 24.x exists only as a transitive
+dependency of whatsapp-web.js — do not rely on it.
+
+Target design (no paid APIs, no Google Static/Street View APIs, no cloud
+billing, no Zillow scraping, no login/CAPTCHA automation):
+
+- Small repo-local capture script (gen-pdf-bg.js style spawn of local
+  Chrome headless `--screenshot`) restricted to an explicit domain
+  allowlist of safe public sources: county GIS public parcel viewers and
+  public-domain federal imagery (USGS/NAIP, FEMA NFHL). If a page blocks
+  automation, report and stop — no workarounds.
+- Evidence PNGs saved OUTSIDE the repo (duke-persist fileRef validation
+  refuses in-repo paths; `workspace/` is gitignored but still in-repo, so
+  use an external evidence folder alongside Duke PDF output).
+- Capture runs only AFTER parcel identity is verified through allowed
+  sources. Coordinates/pins may frame a screenshot of an already-verified
+  parcel but never identify or verify one (hard parcel rule unchanged).
+- Duke Reads the PNG and classifies using the existing visual signal
+  labels (improvement type, condition, debris, overgrowth, removal
+  candidate, occupancy-if-visible), persists as facts + a fileRef
+  (kind: visual_evidence). Bounded: one capture by default, skipped if it
+  risks the 2/3-minute budget.
+
 ## Intentionally not built (per directive)
 
 Live GHL/CRM adapter and sync, outbound SMS/email automation, full model
