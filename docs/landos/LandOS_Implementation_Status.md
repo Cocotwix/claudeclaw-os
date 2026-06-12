@@ -48,6 +48,31 @@ post-run ingest in the agent layer (`src/agent.ts` — not touched in this
 block because it carries unrelated uncommitted local changes). Until then,
 Duke's reports continue to flow to Obsidian + PDF exactly as today.
 
+## Future: LandOS Lead Workspace (planning note only — not built)
+
+Later LandOS should support opening a lead/property card from the dashboard,
+viewing the Duke PDF/report and exact LandPortal property URL inside that
+lead, storing/reporting landos-persist facts, and triggering Duke or other
+agents from that lead context.
+
+Target design:
+
+- lead list or pipeline view
+- click one lead
+- open property card / lead workspace
+- see Duke report PDF embedded
+- see exact LandPortal property URL
+- see parcel verification status, facts, strategy matrix, and agent history
+- run Duke, Ace, or future agents from that lead context
+
+The landos-persist block Duke now emits carries forward-looking top-level
+fields (lpPropertyUrl, sourceUrls, leadName, sellerName, recordOwnerName,
+recordOwnerSource, ownerNameNote, additionalRiskScreens, verificationStatus)
+specifically for this workspace; today's runtime ignores them and persists
+the mirrored facts/fileRefs instead. Not in scope until Tyler opens the
+block: Kanban/property-card workspace, CRM integration, lead-name matching,
+title verification, probate verification, new external integrations.
+
 ## Intentionally not built (per directive)
 
 Live GHL/CRM adapter and sync, outbound SMS/email automation, full model

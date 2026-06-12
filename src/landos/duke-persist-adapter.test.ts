@@ -126,6 +126,76 @@ describe('persistDukeRunPostDelivery', () => {
     expect(db.prepare(`SELECT COUNT(*) AS n FROM landos_audit_log WHERE action = 'duke_run_persisted'`).get()).toMatchObject({ n: 1 });
   });
 
+  it('persists the full documented Duke block: forward-looking top-level fields ignored, mirrored facts and URL fileRefs persisted', () => {
+    // Mirrors the schema documented in landos-agents/duke-due-diligence/CLAUDE.md
+    // (Step 11: landos-persist Block). Top-level fields like lpPropertyUrl,
+    // leadName, ownerNameNote, additionalRiskScreens are forward-looking for
+    // the Lead Workspace; persistence-critical data is mirrored into
+    // facts/fileRefs, which is what the adapter persists today.
+    const fullBlock = [
+      '```landos-persist',
+      JSON.stringify({
+        entity: 'TY_LAND_BIZ',
+        agentId: 'duke-due-diligence',
+        status: 'success',
+        reportStatus: 'delivered',
+        summary: '100 Test Rd, Testville TX -- Land Score 72, PURSUE WITH CAUTION (PRELIMINARY)',
+        verificationStatus: 'verified',
+        lpPropertyUrl: 'https://landportal.com/property?propertyid=999999&fips=48001',
+        sourceUrls: ['https://landportal.com/property?propertyid=999999&fips=48001'],
+        leadName: 'Jane Smith',
+        sellerName: null,
+        recordOwnerName: 'John Smith',
+        recordOwnerSource: 'LandPortal property data (ownername1full)',
+        ownerNameNote: 'Last name matches record owner. Possible spouse, family member, or related party. Confirm seller authority during discovery/title.',
+        error: null,
+        additionalRiskScreens: [
+          { screen: 'septic_soil', result: 'LP soil data present; Web Soil Survey skipped (budget)', source: 'lp_property_data' },
+        ],
+        parcel: {
+          address: '100 Test Rd',
+          city: 'Testville',
+          county: 'Test County',
+          state: 'TX',
+          apn: '123-456-789',
+          lpPropertyId: '999999',
+          fips: '48001',
+          acres: 5.2,
+          verified: true,
+          verificationSource: 'lp_property_data record match (APN + FIPS)',
+        },
+        facts: [
+          { fact: 'acreage', value: '5.2', label: 'Verified', source: 'lp_property_data' },
+          { fact: 'owner_name_note', value: 'Last name matches record owner. Possible spouse, family member, or related party. Confirm seller authority during discovery/title.', label: 'Needs verification' },
+          { fact: 'record_owner_name', value: 'John Smith', label: 'Verified', source: 'LandPortal property data (ownername1full)' },
+          { fact: 'risk_screen: septic_soil', value: 'LP soil data present; Web Soil Survey skipped (budget)', label: 'Needs verification', source: 'lp_property_data' },
+        ],
+        fileRefs: [
+          { kind: 'lp_property_url', pathOrRef: 'https://landportal.com/property?propertyid=999999&fips=48001', note: 'Exact LandPortal property URL' },
+        ],
+      }),
+      '```',
+    ].join('\n');
+
+    const result = persistDukeRunPostDelivery(successInfo({
+      responseText: FAKE_REPORT + '\n\n' + fullBlock,
+    }));
+    expect(result).not.toBeNull();
+    expect(result!.factIds).toHaveLength(4);
+
+    const db = getLandosDb();
+    const parcel = db.prepare('SELECT * FROM landos_parcel WHERE id = ?').get(result!.parcelId) as Record<string, unknown>;
+    expect(parcel.verified).toBe(1);
+    expect(parcel.lp_property_id).toBe('999999');
+    const ownerFact = db.prepare(`SELECT value, label FROM landos_fact WHERE fact = 'owner_name_note'`).get() as Record<string, unknown>;
+    expect(ownerFact.label).toBe('Needs verification');
+    expect(String(ownerFact.value)).toContain('Last name matches record owner');
+    const urlRef = db.prepare(`SELECT path_or_ref FROM landos_file_ref WHERE kind = 'lp_property_url'`).get() as Record<string, unknown>;
+    expect(urlRef.path_or_ref).toBe('https://landportal.com/property?propertyid=999999&fips=48001');
+    // PDF link from the report body still auto-captured alongside the URL ref
+    expect(db.prepare(`SELECT COUNT(*) AS n FROM landos_file_ref`).get()).toMatchObject({ n: 2 });
+  });
+
   it('persists run metadata alone when the report has no persist block', () => {
     const result = persistDukeRunPostDelivery(successInfo());
     expect(result).not.toBeNull();

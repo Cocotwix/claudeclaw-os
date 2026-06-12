@@ -371,3 +371,29 @@ Do not modify Land Ally systems, documents, workflows, or records unless Tyler e
 These rules apply to every current and future LandOS agent.
 
 Do not require Tyler to repeat these rules when creating or modifying a new agent.
+
+## Superpowers usage policy
+
+Superpowers is installed locally for this repo. LandOS rules override Superpowers wherever they conflict.
+
+Superpowers may be used for:
+complex architecture work
+debugging
+TDD
+multi-file workflow blocks
+new agent builds
+
+Superpowers must not be used to create approval spam.
+
+Do not use Superpowers for:
+tiny edits
+simple approvals
+shortcut checks
+git status checks
+fast operational fixes
+
+Hard limits:
+No auto worktrees.
+No auto commits.
+No auto pushes.
+No auto subagent dispatch unless Tyler explicitly approves.
