@@ -6,18 +6,19 @@ Session start reference. Update via `/landos-done` at end of each session. No pr
 
 ## Latest Commit
 
-`40c0585` Fix Duke dashboard Fast Default Report conflict
+`377b185` Fix LandOS shell agent YAML descriptions (last pushed)
 
 Branch: main
-Origin: up to date with origin/main
+Origin: staged changes pending Tyler approval for Foundation Sprint v1 + Duke runtime-mode refactor commit.
 
 ---
 
 ## Active Build Issue
 
 Duke dashboard address-only smoke test has timed out four times on a real address.
-Root cause: Duke's CLAUDE.md is too large and all-purpose. Runtime mode selection is missing.
-Fix path: Duke runtime-mode refactor (see LandOS_Active_Plans.md). Not in scope for Foundation Sprint v1.
+Root cause: Duke's CLAUDE.md was too large (~2,700 lines loaded as system prompt on every turn).
+Fix status: Duke runtime-mode refactor complete (2026-06-13). Files written, not yet committed.
+Next step: Tyler approves commit, then smoke test to confirm sub-2-minute Fast Default.
 
 ---
 
@@ -77,6 +78,7 @@ All sprint deliverables complete (2026-06-13). Pending Tyler approval to stage a
 
 ## Next Exact Action
 
-1. Tyler approves git staging and commit of Foundation Sprint v1 files (exact git add command in sprint final report).
-2. Restart ClaudeClaw so dashboard picks up new agent folders.
-3. Open next block: Duke runtime-mode refactor (lightweight prompt, runtime-mode selector, skills loaded per mode).
+1. Tyler approves staging and commit for Foundation Sprint v1 + Duke runtime-mode refactor (two commits or one combined commit -- Tyler decides).
+2. Restart ClaudeClaw so dashboard picks up new agent folders and Duke's slim CLAUDE.md.
+3. Run Duke smoke test: submit an address-only input in the dashboard, confirm sub-2-minute Fast Default Report with Read of duke-fast-default.md as the first action.
+4. If smoke test passes: mark Duke runtime-mode refactor complete in LandOS_Active_Plans.md.

@@ -44,29 +44,40 @@ Agents must not embed full skill logic in their CLAUDE.md; skills are loaded per
 
 ## Duke Skills (Active)
 
+Skill files live at: `landos-agents/duke-due-diligence/skills/`
+Duke reads these at runtime using the Read tool before calling any external tool.
+
 ### `duke-fast-default`
 
 Load when: address or APN is provided, no Full Report or comp request.
 
-Steps: lp_search → lp_resolve_property → lp_property_data → fact labels → scoring → EV estimate → anomaly flags → Default Duke Report in chat. Target under 2 minutes. No comp credit used.
+File: `skills/duke-fast-default.md`
+
+Steps: identify search path → lp_resolve_property (address) or lp_property_data (APN/propertyid+fips) → extract parcel data → score (6-factor rubric) → EV estimate (Partial Report formula) → anomaly flags → Fast Default Report format in chat. Target under 2 minutes. 0 comp credits. Includes landos-persist block.
 
 ### `duke-area-only`
 
 Load when: city/county/region query, no specific parcel provided or verifiable.
 
-Steps: lp_search with area params → area statistics → report labeled "Local Area Context, Not Parcel Verified." Never apply parcel-level facts, scoring, or EV to an area-only result.
+File: `skills/duke-area-only.md`
+
+Steps: check 30-day MI cache → one combined web search if no valid cache → area-only output labeled "Area Only Local Market Context" → save MI note. No LP calls. No parcel verification. No scoring or valuation.
 
 ### `duke-full-report`
 
-Load when: Tyler explicitly approves spending one LandPortal comp credit.
+Load when: Tyler explicitly approves spending one LandPortal comp credit. Fast Default must have run first.
 
-Steps: same as fast-default plus lp_comp_report_create → individual comp rows → extended valuation. MUST have explicit Tyler approval before calling lp_comp_report_create. Never auto-trigger.
+File: `skills/duke-full-report.md`
+
+Steps: confirm comp credit in same exchange → lp_comp_report_create → lp_comp_report_get → clean comps → Full Report EV formula (50/30/20) → Exit Strategy Matrix → full 14-section report → Obsidian save → PDF generation. MUST have explicit Tyler approval before calling lp_comp_report_create. Never auto-trigger.
 
 ### `duke-unconfirmed-parcel`
 
-Load when: lp_search returns multiple matches.
+Load when: lp_resolve_property returns multiple_candidates, not_verified, or ambiguous_fips.
 
-Steps: present matches, require exact parcel selection. Do not proceed to lp_property_data until a single parcel is confirmed. Save property ID + FIPS on selection.
+File: `skills/duke-unconfirmed-parcel.md`
+
+Steps: show candidates → run bounded exact-disambiguation pass → compact first-answer format → include Local Area Context if location anchor exists → ask Tyler one confirmation question. Max 2 external calls. No scoring, no valuation, no offer guidance until parcel confirmed. After Tyler confirms: switch to duke-fast-default.md.
 
 ---
 
