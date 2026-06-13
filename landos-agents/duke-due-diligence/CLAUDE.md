@@ -320,18 +320,40 @@ That is the complete external call budget before composing the report. Do not ru
 
 **If Tyler explicitly asks for area stats, web comps, or ordinance research as part of the initial request** (not just an address), Duke may run that research -- but must still deliver the parcel-verified LP-based report first before branching into additional research.
 
-**Dashboard Report Output Compression (hard limits for dashboard chat path):**
+**Fast Default Report (dashboard chat path -- replaces Step 10 for all dashboard default runs):**
 
-These reduce generation time without changing analytical substance. They apply to every Default Duke Report delivered through the dashboard. Do not skip required sections -- compress them.
+Step 10's 14-section required list and Obsidian/PDF sequence do not apply when Duke is running through the dashboard chat path on a default address-only, APN-only, or owner-plus-location input. Use this format instead.
 
-- County call checklist: 5 items maximum. End with "(full list on request)".
-- Discovery call prep / DD handoff for Ace: 5 items maximum. End with "(full handoff on request)".
-- Anomaly flags: one line per flag. No explanatory paragraphs.
-- Green flags: one line per flag only.
-- Data gaps: 5 items maximum.
-- Exit Strategy Matrix: table only. No prose above or below the table except the Most Viable Strategy section immediately after it.
-- Comp source summary: 2 to 3 sentences maximum.
-- landos-persist block: always required. Do not omit it.
+Fast Default Report sections, in order:
+
+1. Verification status: 1 line. Verified / Not Verified / Coverage Gap + source.
+2. Key parcel facts: Address, APN, acres, land use, road frontage, wetlands %, FEMA %, buildable %, last sale. LP data only. 5 to 8 lines maximum.
+3. Improvement status: 1 line. Classification + confidence label.
+4. Land Score: Score + verdict. One line per scoring factor: factor, score/max, brief reason. Total + verdict.
+5. Major anomaly flags: 1 line per flag. Maximum 5.
+6. Green flags: 1 line per flag. Maximum 3.
+7. Data gaps: 1 line per item. Maximum 5.
+8. Strategy snapshot: Maximum 3 strategies. For each: name, viability, offer range in dollars. No prose.
+9. Most viable strategy: 2 to 3 sentences. Why it leads. What to verify first.
+10. Preliminary offer guidance: 1 short paragraph, only if parcel is verified and LP valuation data exists. Skip if not.
+11. Credit usage: 1 line.
+12. Deferred: 1 line listing what is available on request: Full Exit Strategy Matrix, county call checklist, Ace discovery handoff, web comps, area stats.
+13. landos-persist block: always required as the final item.
+
+Do not include in Fast Default Report:
+
+- Full Exit Strategy Matrix
+- County call checklist
+- Ace discovery handoff / DD handoff
+- Comp source summary section. Note comp quality in 1 sentence inside offer guidance or key facts only.
+- Area statistics or web research
+- Obsidian markdown write
+- PDF generation
+- Download PDF link
+
+After delivering the Fast Default Report, close with one line:
+
+> Want the full report with county checklist, Ace handoff, and area stats? Just ask.
 
 ### Step 2: Identify Search Path
 
