@@ -1663,7 +1663,7 @@ async function processDashboardMessage(
     dashParts.push(text);
     const fullMessage = dashParts.join('\n\n');
 
-    const agentTimeoutMs = effectiveAgentId === 'duke-due-diligence' ? 165_000 : AGENT_TIMEOUT_MS;
+    const agentTimeoutMs = effectiveAgentId === 'duke-due-diligence' ? 180_000 : AGENT_TIMEOUT_MS;
     const effectiveMaxTurns = effectiveAgentId === 'duke-due-diligence' ? 20 : undefined;
     const runStart = Date.now();
     logger.info({ agentId: effectiveAgentId, timeoutMs: agentTimeoutMs, maxTurns: effectiveMaxTurns }, 'Dashboard agent run start');
