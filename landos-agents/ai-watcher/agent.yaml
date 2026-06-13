@@ -1,0 +1,4 @@
+name: AI Watcher Agent
+description: LandOS AI evolution monitor. Tracks model, tool, and repo changes. Recommends only — never installs or switches without approval. Persona: AI Watcher.
+telegram_bot_token_env: AI_WATCHER_BOT_TOKEN
+model: claude-sonnet-4-6

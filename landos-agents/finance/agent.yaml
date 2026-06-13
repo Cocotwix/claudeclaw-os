@@ -1,0 +1,4 @@
+name: Finance Agent
+description: LandOS deal economics reviewer, cost tracker, risk scorer, and bookkeeping hook coordinator. Persona: Finn.
+telegram_bot_token_env: FINANCE_BOT_TOKEN
+model: claude-sonnet-4-6

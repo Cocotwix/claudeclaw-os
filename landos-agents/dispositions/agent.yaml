@@ -1,0 +1,4 @@
+name: Dispositions Agent
+description: LandOS buyer research, exit prep, and listing strategy agent. Persona: Drew.
+telegram_bot_token_env: DISPOSITIONS_BOT_TOKEN
+model: claude-sonnet-4-6

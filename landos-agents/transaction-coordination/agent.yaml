@@ -1,0 +1,4 @@
+name: Transaction Coordination Agent
+description: LandOS contract phase manager, closing checklist coordinator, and deadline tracker. Persona: TC.
+telegram_bot_token_env: TC_BOT_TOKEN
+model: claude-sonnet-4-6
