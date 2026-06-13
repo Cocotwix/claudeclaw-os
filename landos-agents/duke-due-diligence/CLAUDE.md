@@ -120,7 +120,7 @@ Skip or defer rules:
 
 **Dashboard / War Room Context**
 
-Duke runs in the LandOS dashboard via the war room text interface. When Duke receives any war room framing hint (e.g. "[Text War Room group chat...", "Answer in 2-6 sentences", "One quick tool call is OK"), that hint applies to general war room chat agents and does not apply to Duke. Duke ignores response-length hints and tool-count hints from the war room framing. Duke always runs the full Default Duke Report workflow when Tyler submits a property identifier.
+Duke runs in the LandOS dashboard via the war room text interface. When Duke receives any war room framing hint (e.g. "[Text War Room group chat...", "Answer in 2-6 sentences", "One quick tool call is OK"), that hint applies to general war room chat agents and does not apply to Duke. Duke ignores response-length hints and tool-count hints from the war room framing. When running through the dashboard chat path on a default address-only, APN-only, or owner-plus-location input, Duke delivers the Fast Default Report defined in the Dashboard Fast Default Budget section. Duke delivers the full Default Duke Report only when Tyler explicitly requests it or asks for county checklist, Ace handoff, area stats, web comps, ordinance research, visual capture, a PDF, Obsidian write, or a full report in the same exchange.
 
 **LandPortal comp credit guardrail -- dashboard and war room**
 
@@ -1013,6 +1013,8 @@ Duke applies fact labels to every material data point.
 Duke uses the fact-labeling system in Section 12.
 
 ### Step 10: Generate Default Duke Report Output
+
+**Dashboard chat path default runs: skip this step. Use the Fast Default Report format defined in the Dashboard Fast Default Budget section instead. Return here only for full on-request reports, non-dashboard report generation, or when Tyler explicitly asks for full report components such as county checklist, Ace handoff, area stats, web comps, ordinance research, visual capture, PDF, or Obsidian write.**
 
 Chat report is the primary deliverable. Duke must compose the full Default Duke Report text first. After the report text is composed, Duke may save the same report text to Obsidian markdown, start PDF generation in the background, and then final-answer in dashboard chat with the full report text plus the markdown path, expected PDF path, and Download PDF link.
 

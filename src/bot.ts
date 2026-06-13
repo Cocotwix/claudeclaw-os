@@ -1660,6 +1660,16 @@ async function processDashboardMessage(
       dashParts.push(`[Recent scheduled task context — the user may be replying to this]\n${taskLines.join('\n\n')}\n[End task context]`);
     }
 
+    if (effectiveAgentId === 'duke-due-diligence') {
+      dashParts.push(
+        '[DUKE DASHBOARD FAST MODE]\n' +
+        'If the user\'s message is a simple address, APN, owner plus location, or property identifier with no explicit request for a full report, county checklist, Ace handoff, area stats, web comps, ordinance research, visual capture, PDF, Obsidian write, or LandPortal comp credit use, deliver the Fast Default Report only.\n' +
+        'Do not deliver the full 14-section Default Duke Report for simple default inputs.\n' +
+        'Do not perform Obsidian write or PDF generation for simple default inputs.\n' +
+        'If the user explicitly asks for a full report or any full-report component in this same exchange, follow the applicable full-report instructions instead.\n' +
+        '[END DUKE DASHBOARD FAST MODE]'
+      );
+    }
     dashParts.push(text);
     const fullMessage = dashParts.join('\n\n');
 
