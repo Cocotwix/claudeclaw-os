@@ -673,8 +673,8 @@ async function handleMessage(ctx: Context, message: string, forceVoiceReply = fa
       }
     }
 
-    // Emit assistant response to SSE clients
-    emitChatEvent({ type: 'assistant_message', chatId: chatIdStr, content: rawResponse, source: 'telegram' });
+    // Emit assistant response to SSE clients (machine persist payloads stripped)
+    emitChatEvent({ type: 'assistant_message', chatId: chatIdStr, content: stripLandosPersistBlock(rawResponse), source: 'telegram' });
 
     // Send any attached files first
     for (const file of fileMarkers) {
@@ -1593,6 +1593,15 @@ export function createBot(): Bot {
 }
 
 /**
+ * Strip machine-readable landos-persist fenced blocks from a response before
+ * showing it in the dashboard chat. Persistence uses the raw response, so
+ * stripping here never affects what gets persisted.
+ */
+function stripLandosPersistBlock(text: string): string {
+  return text.replace(/\n?```landos-persist[\s\S]*?```/g, '').trim();
+}
+
+/**
  * Process a message sent from the dashboard web UI.
  * Runs the agent pipeline and relays the response to Telegram.
  * Response is delivered via SSE (fire-and-forget from the caller's perspective).
@@ -1748,8 +1757,13 @@ async function processDashboardMessage(
     // SSE so the dashboard bubble doesn't show raw "[SEND_PHOTO|url]"
     // text. Any photo URLs end up as separate assistant_photo events
     // (handled below) so the SPA can inline-render them.
+    // Also strip landos-persist blocks — machine payloads are processed
+    // by persistDukeRunPostDelivery (which uses rawResponse) and must
+    // never appear in the visible chat. Tyler sees only the plain report.
     const { text: responseText, files: dashFileMarkers } = extractFileMarkers(rawResponse);
-    const cleanedForChat = responseText || (dashFileMarkers.length > 0 ? '' : 'Done.');
+    const cleanedForChat = stripLandosPersistBlock(
+      responseText || (dashFileMarkers.length > 0 ? '' : 'Done.'),
+    );
 
     // Emit assistant response to SSE clients
     if (cleanedForChat) {

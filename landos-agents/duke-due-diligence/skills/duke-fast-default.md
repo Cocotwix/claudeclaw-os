@@ -124,6 +124,7 @@ If verified parcel but lead name differs from owner of record: flag as "Owner/Le
 - Full names match: "Lead name matches record owner."
 - Last names match, first names differ: "Last name matches record owner. Confirm seller authority during discovery/title."
 - Names do not match: "Lead name does not match record owner. Confirm seller relationship/authority during discovery/title."
+- Record owner available from LP or official data, but no leadName or sellerName provided: "Record owner available from [source]. Seller authority not evaluated." Do not claim a match or mismatch when no lead/seller name was provided.
 - Record owner not available: "Record owner not evaluated."
 
 Zero extra tool calls for name comparison. Never chase ownership records unless Tyler explicitly asks.
@@ -278,6 +279,8 @@ For the Fast Default Report: maximum 3 strategies with name, viability, and offe
 
 **LAND-HOME PACKAGE:** Label as "Needs verification" unless area data already returned manufactured/mobile home resale comps in the $200k+ range. If qualifying: formula = projected land-home resale minus manufactured home cost, utility tie-ins, permits/site work, holding/closing/selling costs, minimum $10k profit. Label numeric output "Unavailable -- missing inputs" if key figures are not available.
 
+**Sub-1-acre infill lot discipline:** When the parcel is under 1 acre and the preliminary EV is low, explicitly compare the offer range against Tyler's minimum $10,000 net profit baseline. Factor in closing, holding, resale, cleanup, title, and marketing costs. When the margin is tight, add this line: "At this EV, offer discipline is tight. The offer must leave room for Tyler's minimum $10,000 net target after all transaction and resale costs, or the deal should be passed or renegotiated lower."
+
 Label all offer guidance: PRELIMINARY -- comp report not run.
 
 Show dollar amounts, not just percentages.
@@ -399,7 +402,7 @@ Every Fast Default Report ends with exactly one `landos-persist` fenced JSON blo
   "sellerName": null,
   "recordOwnerName": null,
   "recordOwnerSource": null,
-  "ownerNameNote": "Record owner not evaluated.",
+  "ownerNameNote": "Record owner available from LandPortal. Seller authority not evaluated.",
   "error": null,
   "additionalRiskScreens": [],
   "improvementStatus": "vacant_land",
@@ -441,6 +444,7 @@ Every Fast Default Report ends with exactly one `landos-persist` fenced JSON blo
 - visualConditionSignal values: clean_livable_signal / dated_repair_needed_signal / rough_poor_condition_signal / possible_removal_candidate_signal / unknown_or_not_available
 - manufacturedHomeFinancingSignal values: likely_not_fha_friendly_pre_1976 / practical_financing_caution_1976_to_1984 / practical_financing_caution_older_than_1985 / possible_financeable_land_home_path_1985_or_newer / year_unknown_needs_verification / not_applicable
 - **Mirroring required:** ownerNameNote also as a facts entry (fact: "owner_name_note"). leadName/sellerName/recordOwnerName when present also as facts entries. lpPropertyUrl also as a fileRefs entry (kind: "lp_property_url").
+- **fileRefs field names:** Use `kind`, `pathOrRef`, `note`. Never use `value`. Example: `{ "kind": "lp_property_url", "pathOrRef": null, "note": "lpPropertyId + FIPS recorded. Exact URL not exposed by current wrapper." }`
 - On failure or unverified parcel: still emit block with what is safely known (status, reportStatus, error, location anchors, verified false).
 
 **LandPortal property URL:** Include in the report and in landos-persist when the exact URL is available. Never invent or construct a LandPortal URL from propertyid/FIPS patterns -- the current wrapper does not return a property URL in its output. If lpPropertyId + FIPS are known but no exact URL exists: set lpPropertyUrl null and add to Data Gaps: "Exact LandPortal property URL not exposed by current wrapper. lpPropertyId + FIPS recorded."

@@ -110,6 +110,12 @@ AI Evolution automation, external web research automation, backup automation,
 Tailscale, War Room/voice/avatars, paid APIs, package installs, LandPortal
 comp report calls, training-file processing, git commits/pushes.
 
+## Dashboard persistence payload handling
+
+The dashboard strips `landos-persist` fenced blocks from agent responses before displaying them in the chat UI. Tyler sees only the clean plain-English report. Machine persistence payloads are processed silently by `persistDukeRunPostDelivery` (which reads the raw response before stripping) and never appear in visible chat.
+
+Duke reports must end in plain English. The `landos-persist` block is a machine artifact for the LandOS runtime only.
+
 ## Known pre-existing test failures (not caused by OS Spine v1)
 
 12 failures across 3 committed test files, none importing `src/landos`:
