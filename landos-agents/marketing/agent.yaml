@@ -1,4 +1,4 @@
 name: Marketing Agent
-description: LandOS campaign and lead-source performance analyst. No live ad changes without Tyler approval. Persona: Mia.
+description: LandOS campaign and lead-source performance analyst. No live ad changes without Tyler approval.
 telegram_bot_token_env: MARKETING_BOT_TOKEN
 model: claude-sonnet-4-6

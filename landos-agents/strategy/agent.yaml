@@ -1,4 +1,4 @@
 name: Strategy Agent
-description: LandOS deal exit strategy reviewer, offer strategy coordinator, and strategy playbook manager. Persona: Strategy.
+description: LandOS deal exit strategy reviewer, offer strategy coordinator, and strategy playbook manager.
 telegram_bot_token_env: STRATEGY_BOT_TOKEN
 model: claude-sonnet-4-6

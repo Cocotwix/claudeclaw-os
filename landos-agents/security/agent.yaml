@@ -1,4 +1,4 @@
 name: Security Agent
-description: LandOS repo, package, and MCP security reviewer. Secrets hygiene enforcer. Veto power via security_review records. Persona: Security.
+description: LandOS repo, package, and MCP security reviewer. Secrets hygiene enforcer. Veto power via security_review records.
 telegram_bot_token_env: SECURITY_BOT_TOKEN
 model: claude-sonnet-4-6
