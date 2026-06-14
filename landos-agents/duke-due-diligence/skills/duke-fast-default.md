@@ -175,6 +175,14 @@ If improvement evidence found: raise "Improved Property / Structure Present" ano
 - structure present but type needs verification
 - unknown improvement status
 
+**LP building sqft = 0 is not full vacancy confirmation:** When the only evidence of vacancy is LP `building_area_sqft` = 0 (or near-zero LP improvement value) and no county record, official assessor data, listing evidence, or Tyler-provided confirmation exists, do not state "Vacant land" as a fully verified fact. Use:
+
+"Likely vacant per LandPortal (building sqft = 0). Confirm with county record or visual before treating as fully verified vacant land."
+
+If LP land use code is labeled "Assumed": always add "Needs verification" to the improvement status line.
+
+Reserve fully verified "vacant land" classification for parcels where at least one of the following confirms no improvements: county assessor record, official improvement value = $0 with no structure evidence, reliable listing/photo evidence reviewed and documented, or Tyler-provided confirmation.
+
 **If stick-built house or major non-mobile structure present:** state clearly:
 - Improvement Status: structure present
 - Lead Type: improved residential property, not pure vacant land
@@ -359,7 +367,7 @@ Sections in order:
 9. **Most viable strategy:** 2-3 sentences. Why it leads. What to verify first.
 10. **Preliminary offer guidance:** 1 short paragraph. Include only if parcel is verified and LP valuation data exists. Skip if not. Show the mechanical offer range first. If the profit-rule condition applies (Step 7), add the profit-rule note immediately below the range — do not hide or replace the range.
 11. **Credit usage:** 1 line. (e.g., "0 comp credits used.")
-12. **Deferred:** 1 line listing what is available on request: Full Exit Strategy Matrix, county call checklist, Ace discovery handoff, web comps, area stats.
+12. **Deferred:** 1 line listing what is available on request: Full Exit Strategy Matrix, county call checklist, Ace discovery handoff, web comps, area stats, comp report. When listing the comp report, always phrase it as: "comp report (available only with Tyler's explicit approval to use 1 LandPortal comp credit)." Never phrase the comp report as casually available or omit the approval requirement.
 13. **landos-persist block:** Always required as the very last item.
 
 Do NOT include in Fast Default Report:
